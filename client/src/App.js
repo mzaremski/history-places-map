@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import { Container, Menu} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
@@ -14,8 +14,8 @@ class App extends React.Component {
             <Container fluid>
                 <Menu style={{"marginBottom": 0,position: "relative", zIndex: 1000000}}>
                     <Menu.Item header>Historical places map</Menu.Item>
-                    <Menu.Item href="/" name='Home'/>
-                    <Menu.Item href="/addplace" name='Dodaj Miejsce'/>
+                    <Menu.Item as={Link} to='/' name='Home'/>
+                    <Menu.Item as={Link} to='/addplace' name='Dodaj Miejsce'/>
                 </Menu>
 
                 <Route exact path="/" render={() => <Home appMode="showMarkers"/>} />
