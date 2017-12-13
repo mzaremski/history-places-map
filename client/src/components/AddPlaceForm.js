@@ -47,10 +47,10 @@ class AddPlaceForm extends React.Component {
                         }
                         {
                             this.state.isError === false ?
-                                <Message positive>Dziękujemy za wysłanie znacznika!</Message>
+                                <Message positive>Znacznik został zapisany. Dziękujemy!</Message>
                                 :
                                 (this.state.isError === true ?
-                                    <Message warning>Występił błąd w zapisywaniu znacznika!</Message>
+                                    <Message color="red">Występił błąd podczas zapisywania znacznika! Przepraszamy!</Message>
                                     :
                                     ""
                                 )
