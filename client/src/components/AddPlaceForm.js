@@ -11,7 +11,7 @@ class AddPlaceForm extends React.Component {
       return (
           <Container>
               {this.props.newMarker ?
-                  <Form onSubmit={e => this.addMarkerRequest(e)}>
+                  <Form id="addPlaceForm" onSubmit={e => this.addMarkerRequest(e)}>
                         <Form.Field>
                               <label>Nazwa miejsca</label>
                               <input placeholder='Nazwa miejsca' name="placeName" onChange={e => this.changeValue(e)}/>
@@ -39,17 +39,32 @@ class AddPlaceForm extends React.Component {
                                 <li>lng: {this.props.newMarker.lng}</li>
                             </ul>
                         </Message>
+
                         <Button color="teal" type='submit'>Dodaj znacznik!</Button>
+
+                        {
+                            (this.state.isValide === false ? <Message color="orange">Proszę uzupełnić poprawnie formularz!</Message> : "")
+                        }
+                        {
+                            this.state.isError === false ?
+                                <Message positive>Dziękujemy za wysłanie znacznika!</Message>
+                                :
+                                (this.state.isError === true ?
+                                    <Message warning>Występił błąd w zapisywaniu znacznika!</Message>
+                                    :
+                                    ""
+                                )
+                        }
+
                   </Form>
                   :
-                  <Message>Kliknij na mapę w celu dodania znacznika.</Message>
+                  <Message info>Kliknij na mapę w celu dodania znacznika.</Message>
               }
 
           </Container>
       );
   }
     changeValue(e){
-        console.log(e.target.name)
         this.setState({
             placeFormData:{
                 ...this.state.placeFormData,
@@ -60,27 +75,56 @@ class AddPlaceForm extends React.Component {
 
     addMarkerRequest(e){
         e.preventDefault()
+        var target = e.target
+
         var placeData = {
             ...this.state.placeFormData,
             lat: this.props.newMarker.lat,
             lng: this.props.newMarker.lng
         }
 
-        console.log(placeData)
+        if(this.isFormValid()){
+            this.setState({isValide: true})
 
-        axios({
-             method: 'post',
-             url: '/addmarker',
-             data: placeData
-        }).then(response => {
-            if(response.data.isError){
-                this.setState({isError: response.data.isError});
-            }else{
-                this.state = {isError: false}
-            }
-        });
-
+            axios({
+                 method: 'post',
+                 url: '/addmarker',
+                 data: placeData
+            }).then(response => {
+                if(response.data.isError){
+                    this.setState({isError: response.data.isError});
+                }else{
+                    this.setState({isError: false, placeFormData: {}})
+                    target.reset();//clear form fields
+                }
+            });
+        }else{
+            this.setState({isValide: false})
+        }
     }
+
+    isFormValid(){
+        var formFields = this.state.placeFormData
+
+        return (
+            formFields.placeContent &&
+            (formFields.placeContent.length > 10) &&
+            formFields.placeDesc &&
+            (formFields.placeDesc.length > 5) &&
+            formFields.placeName &&
+            (formFields.placeName.length > 5) &&
+            this.isValidURL(formFields.placePictureURL) &&
+            this.isValidURL(formFields.placeWikiURL)
+        ) ? true : false
+    }
+
+
+    isValidURL(str){
+       var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+       return regexp.test(str);
+    }
+
+
 }
 
 export default AddPlaceForm;

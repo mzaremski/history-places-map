@@ -38,7 +38,7 @@ class PlaceInfoSidebar extends React.Component {
 
                 :
 
-                <Message>"Jeśli chcesz zobaczyć informacje na temat miejsca. Kliknij w wybrany znacznik na mapie."</Message>
+                <Message info>"Jeśli chcesz zobaczyć informacje na temat miejsca. Kliknij w wybrany znacznik na mapie."</Message>
             }
         </Container>
       );
