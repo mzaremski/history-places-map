@@ -50,7 +50,6 @@ export class MapContainer extends React.Component {
     }
 
 
-
     getArrayOfMarkersComponent(state){
         const markers = []
 

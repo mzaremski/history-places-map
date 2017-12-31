@@ -1,12 +1,17 @@
 import React from 'react';
 import axios from 'axios';
+import Quill from 'quill';
 import {Container, Message, Button, Form, Icon, TextArea} from 'semantic-ui-react'
 
 class AddPlaceForm extends React.Component {
     constructor(props){
         super(props)
-        this.state = {placeFormData: {}}
+        this.state = {
+            placeFormData: {}
+        }
     }
+
+
   render() {
       return (
           <Container>
@@ -22,7 +27,7 @@ class AddPlaceForm extends React.Component {
                         </Form.Field>
                         <Form.Field>
                               <label>Opis miejsca</label>
-                              <TextArea placeholder='Opis miejsca' name="placeContent" onChange={e => this.changeValue(e)}/>
+                              <div id="quill-editor-container"></div>
                         </Form.Field>
                         <Form.Field>
                               <label><Icon size="big" name="picture"/> Adres URL do miniaturki</label>
@@ -45,25 +50,70 @@ class AddPlaceForm extends React.Component {
                         {
                             (this.state.isValide === false ? <Message color="orange">Proszę uzupełnić poprawnie formularz!</Message> : "")
                         }
-                        {
-                            this.state.isError === false ?
-                                <Message positive>Znacznik został zapisany. Dziękujemy!</Message>
-                                :
-                                (this.state.isError === true ?
-                                    <Message color="red">Występił błąd podczas zapisywania znacznika! Przepraszamy!</Message>
-                                    :
-                                    ""
-                                )
+                        {this.state.isError === true ?
+                            <Message color="red">Występił błąd podczas zapisywania znacznika! Przepraszamy!</Message>
+                            :
+                            ""
                         }
-
                   </Form>
+
                   :
-                  <Message info>Kliknij na mapę w celu dodania znacznika.</Message>
+                  <div>
+                      <Message info>Kliknij na mapę w celu dodania znacznika.</Message>
+                      {console.log(this.state.isError)}
+                          {
+                              this.state.isError === false ?
+                                  <Message positive>Znacznik został zapisany. Dziękujemy!</Message>
+                                  :
+                                  ""
+                          }
+                  </div>
               }
 
           </Container>
       );
   }
+
+    componentDidUpdate(){
+          this.runQuill()
+    }
+
+
+    runQuill(){
+        var quillContainerSelector = "#quill-editor-container"
+
+        console.log(!this.state.quill)
+        console.log(document.querySelector(quillContainerSelector))
+
+
+        if(!this.state.quill && document.querySelector(quillContainerSelector))
+            this.setState({
+                quill:new Quill(quillContainerSelector, {//create Quill object in #quill-editor-container element
+                      modules: {
+                        toolbar: [
+                          [{ header: [1, 2, 3, false] }],
+                          ['bold', 'italic', 'underline'],
+                          [{ 'color': [] }],
+                          [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'align': [] }],
+                          //['image']
+                        ]
+                      },
+                      placeholder: 'Opis miejsca',
+                      theme: 'snow'  // or 'bubble'
+                    })
+            }, function(){
+                    this.state.quill.on('text-change', function(delta, oldDelta, source) {//When text change in quill editor, content save to state
+                        this.setState({
+                            placeFormData:{
+                                ...this.state.placeFormData,
+                                placeContent: this.state.quill.getContents()
+                            }
+                        })
+                  }.bind(this));
+            }.bind(this))
+    }
+
+
     changeValue(e){
         this.setState({
             placeFormData:{
@@ -91,11 +141,14 @@ class AddPlaceForm extends React.Component {
                  url: '/addmarker',
                  data: placeData
             }).then(response => {
+                console.log(response)
                 if(response.data.isError){
                     this.setState({isError: response.data.isError});
                 }else{
+                    target.reset(); //clear form fields
+                    this.state.quill = false //delete quill object
+                    this.props.newMarkerAdded()
                     this.setState({isError: false, placeFormData: {}})
-                    target.reset();//clear form fields
                 }
             });
         }else{
@@ -105,10 +158,11 @@ class AddPlaceForm extends React.Component {
 
     isFormValid(){
         var formFields = this.state.placeFormData
+        var placeContent = this.state.quill.getText()
 
         return (
-            formFields.placeContent &&
-            (formFields.placeContent.length > 10) &&
+            placeContent &&
+            (placeContent.length > 10) &&
             formFields.placeDesc &&
             (formFields.placeDesc.length > 5) &&
             formFields.placeName &&

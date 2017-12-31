@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import Quill from 'quill';
 import { Container, Header, Icon, Image, Loader, Dimmer,  Message} from 'semantic-ui-react'
 
 
@@ -24,8 +25,8 @@ class PlaceInfoSidebar extends React.Component {
 
                     <Image style={{height: "150px", width: "100%", objectFit: "cover"}} src={this.props.clickedMarker.placePictureURL} alt={this.props.clickedMarker.placeName} />
 
-                    <p>
-                        {this.props.clickedMarker.placeContent}
+                    <p id="placeContent">
+                        {  this.quillDeltaToHTML(this.props.clickedMarker.placeContent)  }
                     </p>
 
                     <a href={this.props.clickedMarker.placeWikiURL} target="blank">
@@ -38,11 +39,26 @@ class PlaceInfoSidebar extends React.Component {
 
                 :
 
-                <Message info>"Jeśli chcesz zobaczyć informacje na temat miejsca. Kliknij w wybrany znacznik na mapie."</Message>
+                <Message info>Jeśli chcesz zobaczyć informacje na temat miejsca. Kliknij w wybrany znacznik na mapie.</Message>
             }
         </Container>
       );
   }
+
+
+      quillDeltaToHTML(inputDelta) {
+          if(inputDelta && typeof inputDelta === "string"){
+              var el = document.createElement( 'p' );
+
+              var ql = new Quill(document.createElement("div"))
+              ql.setContents(JSON.parse(inputDelta));
+
+              el.innerHTML = ql.container.innerHTML
+              document.querySelector("#placeContent").innerHTML = "";
+              document.querySelector("#placeContent").appendChild(el)
+          }
+      }
+
 }
 
 export default PlaceInfoSidebar;

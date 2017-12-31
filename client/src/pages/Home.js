@@ -27,7 +27,10 @@ class Home extends React.Component {
                      <Grid.Column style={{paddingTop:"20px" ,position: "relative", zIndex: 1000, left: "13px", boxShadow: "5px 5px 20px 0px rgba(0,0,0,0.3)", overflowY: "scroll", boxSizing: "border-box"}}  width={4}>
                          {
                          this.props.appMode === 'addPlace' ?
-                             <AddPlaceForm newMarker={this.state.newMarker ? this.state.newMarker : false}/>
+                             <AddPlaceForm
+                                 newMarker={this.state.newMarker ? this.state.newMarker : false}
+                                 newMarkerAdded={this.newMarkerAdded.bind(this)}
+                             />
                              :
                              (this.state.clickedMarkerLoading ?
                                  <Dimmer active>
@@ -44,6 +47,7 @@ class Home extends React.Component {
                             config={this.state.config}
                             addNewMarker={this.addNewMarker.bind(this)}
                             onMarkerClick={this.onMarkerClick.bind(this)}
+                            deleteClickedMarker={this.state.deleteClickedMarker}
                         />
                     </Grid.Column>
                 </Grid.Row>
@@ -56,7 +60,6 @@ class Home extends React.Component {
 
         axios.get('/markers/' + clickedMarker.id)
           .then(function (response) {
-              console.log(response.data)
               this.setState({clickedMarker: response.data[0]})
           }.bind(this))
           .catch(function (error) {
@@ -68,6 +71,10 @@ class Home extends React.Component {
 
     addNewMarker(newMarker){
         this.setState({newMarker})
+    }
+
+    newMarkerAdded(){
+        this.setState({newMarker: false})
     }
 }
 
