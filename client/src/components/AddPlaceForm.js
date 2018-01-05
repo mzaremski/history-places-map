@@ -1,13 +1,19 @@
 import React from 'react';
 import axios from 'axios';
 import Quill from 'quill';
-import {Container, Message, Button, Form, Icon, TextArea} from 'semantic-ui-react'
+import {Container, Message, Button, Form, Icon, TextArea,  Dropdown} from 'semantic-ui-react'
 
 class AddPlaceForm extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            placeFormData: {}
+            placeFormData: {},
+            lol: [
+                { key: 'grave', value: 'grave', text: 'Cmentarz/Grób' },
+                { key: 'church', value: 'church', text: 'Kościół' },
+                { key: 'monument', value: 'monument', text: 'Pomnik' },
+                { key: 'museum', value: 'museum', text: 'Muzeum' },
+            ]
         }
     }
 
@@ -24,6 +30,11 @@ class AddPlaceForm extends React.Component {
                         <Form.Field>
                               <label>Krótki opis miejsca</label>
                               <input placeholder='Krótki opis miejsca' name="placeDesc" onChange={e => this.changeValue(e)}/>
+                        </Form.Field>
+                        <Form.Field>
+                              <label>Rodzaj miejsca</label>
+                              {/* <Select placeholder='Select your country' options={this.state.lol} onChange={e => this.changeValue(e)}/> */}
+                              <Dropdown placeholder='Rodzaj miejsca' openOnFocus={false} selection options={this.state.lol} onChange={(e,dropdown) => {this.changeValue(e, dropdown)}} />
                         </Form.Field>
                         <Form.Field>
                               <label>Opis miejsca</label>
@@ -114,11 +125,11 @@ class AddPlaceForm extends React.Component {
     }
 
 
-    changeValue(e){
+    changeValue(e, dropdown){
         this.setState({
             placeFormData:{
                 ...this.state.placeFormData,
-                [e.target.name]: e.target.value
+                [e.target.name || "type"]: e.target.value || dropdown.value
             }
         })
     }
@@ -127,6 +138,8 @@ class AddPlaceForm extends React.Component {
         e.preventDefault()
         var target = e.target
 
+
+        console.log(this.state.placeFormData)
         var placeData = {
             ...this.state.placeFormData,
             lat: this.props.newMarker.lat,
@@ -164,6 +177,7 @@ class AddPlaceForm extends React.Component {
             placeContent &&
             (placeContent.length > 10) &&
             formFields.placeDesc &&
+            formFields.type &&
             (formFields.placeDesc.length > 5) &&
             formFields.placeName &&
             (formFields.placeName.length > 5) &&

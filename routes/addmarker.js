@@ -13,6 +13,7 @@ router.post('/', (req, res) => {
                 NULL,
                 "${ body.placeName }",
                 "${ body.placeDesc }",
+                "${ body.type }",
                 ${db.escape(placeContent)},
                 "${ body.placePictureURL }",
                 "${ body.placeWikiURL }",

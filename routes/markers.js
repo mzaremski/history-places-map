@@ -7,7 +7,7 @@ var db = dbPassword()
 
 /* GET users listing. */
 router.get('/all', function(req, res, next) {
-    let sql = `SELECT id, placeName, placePictureURL, lat, lng  FROM markers`;
+    let sql = `SELECT id, placeName, type, placePictureURL, lat, lng  FROM markers`;
     db.query(sql, function(error, rows, fields){
         if(!!error){
             console.log("Error in the query");

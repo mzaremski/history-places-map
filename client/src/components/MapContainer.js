@@ -9,14 +9,26 @@ import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
 export class MapContainer extends React.Component {
     constructor(props) {
          super(props);
-         this.state = {markers: []}
+         this.state = {
+             markers: [],
+             markerIconSrc:{
+                 "default": "marker2.png",
+                 "grave": "grave-icon.png",
+                 "monument": "monument-icon.png",
+                 "museum": "museum-icon.png",
+                 "church": "church-icon.png"
+             }
+         }
+
+        console.log(this.state);
 
         if(this.props.config.showMarkers){
-            this.state = {loading: true}
+            this.state = {...this.state, loading: true}
             axios.get('/markers/all')
               .then(function (response) {
                   console.log(response.data)
-                  this.setState({markers: response.data, loading: false})
+                  this.setState({markers: response.data, loading: false}, () => {console.log(this.state)});
+
               }.bind(this))
               .catch(function (error) {
                 console.log(error);
@@ -54,6 +66,8 @@ export class MapContainer extends React.Component {
         const markers = []
 
         state.markers.forEach((item, index) => {
+            console.log(state)
+            console.log(item)
             markers.push(
                 <Marker
                     title={item.placeName}
@@ -66,7 +80,7 @@ export class MapContainer extends React.Component {
                     // onMouseover={this.showPopUpOfMarker.bind(this)}
                     // onMouseout={this.hidePopUpOfMarker.bind(this)}
                     icon={{
-                      url: "marker2.png"//,
+                      url: state.markerIconSrc[item.type]//,
                       // anchor: new google.maps.Point(32,32),
                       // scaledSize: new google.maps.Size(64,64)
                     }}
@@ -85,7 +99,8 @@ export class MapContainer extends React.Component {
                 id: Math.floor(Math.random()*1000000),
                 placeName: "New Marker",
                 lat: clickEvent.latLng.lat(),
-                lng: clickEvent.latLng.lng()
+                lng: clickEvent.latLng.lng(),
+                type: "default"
             }
 
             this.setState({markers: [marker], loading: false})
