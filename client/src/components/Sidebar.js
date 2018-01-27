@@ -4,7 +4,7 @@ import Quill from 'quill';
 import { Container, Header, Icon, Image, Loader, Dimmer,  Message} from 'semantic-ui-react'
 
 
-class PlaceInfoSidebar extends React.Component {
+class Sidebar extends React.Component {
     constructor(props){
         super(props)
     }
@@ -61,4 +61,4 @@ class PlaceInfoSidebar extends React.Component {
 
 }
 
-export default PlaceInfoSidebar;
+export default Sidebar;

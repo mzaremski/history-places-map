@@ -13,8 +13,8 @@ class App extends React.Component {
         <Router>
             <Container fluid>
                 <Menu style={{"marginBottom": 0,position: "relative", zIndex: 1000000}}>
-                    <Menu.Item header>Historical places map</Menu.Item>
-                    <Menu.Item as={Link} to='/' name='Home'/>
+                    <Menu.Item header>Multimedialna mapa historyczna</Menu.Item>
+                    <Menu.Item as={Link} to='/' name='Mapa'/>
                     <Menu.Item as={Link} to='/addplace' name='Dodaj Miejsce'/>
                 </Menu>
 

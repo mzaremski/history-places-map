@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Grid, Dimmer, Loader} from 'semantic-ui-react'
 
 import MapContainer from '../components/MapContainer';
-import PlaceInfoSidebar from '../components/PlaceInfoSidebar';
+import Sidebar from '../components/Sidebar';
 import AddPlaceForm from '../components/AddPlaceForm';
 
 
@@ -37,7 +37,7 @@ class Home extends React.Component {
                                      <Loader size='large'>Loading</Loader>
                                  </Dimmer>
                                  :
-                                 <PlaceInfoSidebar clickedMarker={this.state.clickedMarker ? this.state.clickedMarker : false}/>
+                                 <Sidebar clickedMarker={this.state.clickedMarker ? this.state.clickedMarker : false}/>
                              )
                          }
                      </Grid.Column>

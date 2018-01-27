@@ -173,7 +173,7 @@ class AddPlaceForm extends React.Component {
         var formFields = this.state.placeFormData
         var placeContent = this.state.quill.getText()
 
-        return (
+        var isValide = (
             placeContent &&
             (placeContent.length > 10) &&
             formFields.placeDesc &&
@@ -184,6 +184,11 @@ class AddPlaceForm extends React.Component {
             this.isValidURL(formFields.placePictureURL) &&
             this.isValidURL(formFields.placeWikiURL)
         ) ? true : false
+
+        this.setState({isValide: isValide})
+
+        return isValide
+
     }
 
 
