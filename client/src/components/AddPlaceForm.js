@@ -129,7 +129,7 @@ class AddPlaceForm extends React.Component {
         this.setState({
             placeFormData:{
                 ...this.state.placeFormData,
-                [e.target.name || "type"]: e.target.value || dropdown.value
+                [e.target.name || "type"]: e.target.value || dropdown && dropdown.value
             }
         })
     }
@@ -196,8 +196,6 @@ class AddPlaceForm extends React.Component {
        var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
        return regexp.test(str);
     }
-
-
 }
 
 export default AddPlaceForm;
