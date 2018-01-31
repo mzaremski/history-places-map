@@ -1,13 +1,19 @@
 import React from 'react';
 import axios from 'axios';
 import Quill from 'quill';
-import {Container, Message, Button, Form, Icon, TextArea,  Dropdown} from 'semantic-ui-react'
+import {Container, Dimmer, Message, Button, Form, Icon, TextArea,  Dropdown} from 'semantic-ui-react'
+
+import ImageUploadingComponent from './ImageUploadingComponent';
+
+
 
 class AddPlaceForm extends React.Component {
     constructor(props){
         super(props)
         this.state = {
+            showUploadingImageComponent: false,
             placeFormData: {},
+            idForm: "addPlaceForm",
             lol: [
                 { key: 'grave', value: 'grave', text: 'Cmentarz/Grób' },
                 { key: 'church', value: 'church', text: 'Kościół' },
@@ -22,7 +28,7 @@ class AddPlaceForm extends React.Component {
       return (
           <Container>
               {this.props.newMarker ?
-                  <Form id="addPlaceForm" onSubmit={e => this.addMarkerRequest(e)}>
+                  <Form id={this.state.idForm} onSubmit={e => this.addMarkerRequest(e)}>
                         <Form.Field>
                               <label>Nazwa miejsca</label>
                               <input placeholder='Nazwa miejsca' name="placeName" onChange={e => this.changeValue(e)}/>
@@ -61,11 +67,26 @@ class AddPlaceForm extends React.Component {
                         {
                             (this.state.isValide === false ? <Message color="orange">Proszę uzupełnić poprawnie formularz!</Message> : "")
                         }
+
+
                         {this.state.isError === true ?
                             <Message color="red">Występił błąd podczas zapisywania znacznika! Przepraszamy!</Message>
                             :
                             ""
                         }
+
+
+                        {
+                            (this.state.showUploadingImageComponent === true ?
+                                <ImageUploadingComponent
+                                    mousePositionOfClick={this.state.mousePositionOfClick}
+                                    insertImageToEditor={(link)=>{this.insertImageToEditor(link)}}
+                                    hideImageUploadingComponent={()=>{this.setState({showUploadingImageComponent: false})}}
+                                />
+                                : "")
+                        }
+
+
                   </Form>
 
                   :
@@ -93,21 +114,23 @@ class AddPlaceForm extends React.Component {
     runQuill(){
         var quillContainerSelector = "#quill-editor-container"
 
-        console.log(!this.state.quill)
-        console.log(document.querySelector(quillContainerSelector))
-
-
         if(!this.state.quill && document.querySelector(quillContainerSelector))
             this.setState({
                 quill:new Quill(quillContainerSelector, {//create Quill object in #quill-editor-container element
                       modules: {
-                        toolbar: [
-                          [{ header: [1, 2, 3, false] }],
-                          ['bold', 'italic', 'underline'],
-                          [{ 'color': [] }],
-                          [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'align': [] }],
-                          //['image']
-                        ]
+                        toolbar: {
+                            container: [
+                                  [{ header: [1, 2, 3, false] }],
+                                  ['bold', 'italic', 'underline'],
+                                  [{ 'color': [] }],
+                                  [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'align': [] }],
+                                  ['image']
+                            ]
+                            ,
+                            handlers: {
+                                image: () => { this.imageHandler() }
+                            }
+                        }
                       },
                       placeholder: 'Opis miejsca',
                       theme: 'snow'  // or 'bubble'
@@ -164,6 +187,7 @@ class AddPlaceForm extends React.Component {
                     this.setState({isError: false, placeFormData: {}})
                 }
             });
+
         }else{
             this.setState({isValide: false})
         }
@@ -195,6 +219,18 @@ class AddPlaceForm extends React.Component {
     isValidURL(str){
        var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
        return regexp.test(str);
+    }
+
+
+    imageHandler() {
+        var range = this.state.quill.getSelection();
+        this.setState({showUploadingImageComponent: true, quillRange: range})
+    }
+
+    insertImageToEditor(url){
+        console.log(url)
+        //var range = this.state.quill.getSelection();
+        this.state.quill.insertEmbed(this.state.quillRange.index, "image", url, Quill.sources.USER);
     }
 }
 
