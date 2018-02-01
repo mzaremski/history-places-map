@@ -79,8 +79,7 @@ class AddPlaceForm extends React.Component {
                         {
                             (this.state.showUploadingImageComponent === true ?
                                 <ImageUploadingComponent
-                                    mousePositionOfClick={this.state.mousePositionOfClick}
-                                    insertImageToEditor={(link)=>{this.insertImageToEditor(link)}}
+                                    imageUrlHandler={(link)=>{this.insertImageToEditor(link)}}
                                     hideImageUploadingComponent={()=>{this.setState({showUploadingImageComponent: false})}}
                                 />
                                 : "")

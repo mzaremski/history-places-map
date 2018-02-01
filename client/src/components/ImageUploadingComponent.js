@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Dimmer, Loader, Segment, Icon, Input, Message} from 'semantic-ui-react'
+import {Dimmer, Container, Loader, Segment, Icon, Input, Message} from 'semantic-ui-react'
 
 class ImageUploadingComponent extends React.Component {
     constructor(props) {
@@ -13,8 +13,7 @@ class ImageUploadingComponent extends React.Component {
 
         window.onclick = (e)=>{
             var ImageUploadingComponent = document.getElementById("ImageUploadingComponent")
-            console.log("CLICK")
-            //if(!this.state.firstClick &&  (e.path[0] !== ImageUploadingComponent)){
+
             if(!this.state.firstClick &&  !this.isElementInPatch(e.path, ImageUploadingComponent)){
                 this.props.hideImageUploadingComponent();
             }
@@ -27,25 +26,29 @@ class ImageUploadingComponent extends React.Component {
 
     render() {
         return (
-            <Segment raised id="ImageUploadingComponent" style={{"position":"absolute", "top": this.props.mousePositionOfClick - 75 +"px" }}>
-                    {/* <Icon name='attach'size="large"/> */}
+            <Container style={{"position":"absolute", "top": 0, "width":"100%", "height":"100%"}}>
+                <Dimmer active inverted>
+                    <Segment raised id="ImageUploadingComponent" style={{ "top" : "45%" }}>
+                            {/* <Icon name='attach'size="large"/> */}
 
-                    {this.state.uploading ?
-                        <Dimmer active inverted>
-                              <Loader inverted>Loading</Loader>
-                        </Dimmer>
-                        :
-                        ""
-                    }
+                            {this.state.uploading ?
+                                <Dimmer active inverted>
+                                      <Loader inverted>Loading</Loader>
+                                </Dimmer>
+                                :
+                                ""
+                            }
 
-                    <input type="file" accept="image/*" data-max-size="5000" onChange={e => this.uploadImage(e)} />
+                            <input type="file" accept="image/*" data-max-size="5000" onChange={e => this.uploadImage(e)} />
 
-                    {this.state.error ?
-                        <Message color='red'>Błąd!</Message>
-                    :
-                        ""
-                    }
-            </Segment>
+                            {this.state.error ?
+                                <Message color='red'>Błąd!</Message>
+                            :
+                                ""
+                            }
+                    </Segment>
+                </Dimmer>
+            </Container>
         );
     }
 
@@ -56,7 +59,7 @@ class ImageUploadingComponent extends React.Component {
         data.append('album', "acFS9IforLb0Qi3");
 
         this.setState({uploading: true})
-        
+
         axios({
              method: 'POST',
              headers: {
@@ -65,8 +68,6 @@ class ImageUploadingComponent extends React.Component {
              url: 'https://api.imgur.com/3/image/',
              data
         }).then(response => {
-            console.log(response)
-
             if(response.data.success){
                 this.insertImageDataToDB(response.data.data)
             }else{
@@ -77,39 +78,36 @@ class ImageUploadingComponent extends React.Component {
     }
 
     insertImageDataToDB(data){
-        var dataxd = {
+        const imgurData = {
             id: data.id,
             datetime: data.datetime,
             link: data.link,
             tags: data.tags,
             deletehash: data.deletehash
         }
+        imgurData.tags = JSON.stringify(imgurData.tags)
+        console.log(imgurData)
 
-        if(dataxd.link){
-            this.props.insertImageToEditor(dataxd.link)
-            this.setState({error: false, uploading:false})
-        }else{
-            this.setState({error: true, uploading:false})
-        }
+        axios({
+             method: 'POST',
+             url: '/addimage',
+             data: imgurData
+        }).then(response => {
+            console.log(response)
+            const data = response.data
+            if(!data.isError){
+                if(imgurData.link){
+                    this.props.imageUrlHandler(imgurData.link)
+                    this.props.hideImageUploadingComponent()
+                    this.setState({error: data.isError, uploading:false})
+                }else{
+                    this.setState({error: true, uploading:false})
+                }
+            }else{
+                this.setState({error: true})
+            }
+        });
     }
-
-    // axios({
-    //      method: 'POST',
-    //      headers: {
-    //         'Authorization': 'Client-ID 969f27a869eb799',
-    //    },
-    //      url: 'https://api.imgur.com/3/image/',
-    //      data
-    // }).then(response => {
-    //     console.log(response)
-    //
-    //     if(response.success){
-    //         this.insertImageDataToDB(response.data)
-    //     }else{
-    //         this.setState({success: false})
-    //     }
-    //
-    // });
 
     isElementInPatch(patch, element){
         var isInPatch = false

@@ -12,6 +12,7 @@ var cors = require('cors')
 var index = require('./routes/index');
 var markers = require('./routes/markers');
 var addmarker = require('./routes/addmarker');
+var addimage = require('./routes/addimage');
 
 
 
@@ -37,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/markers', markers);
 app.use('/addmarker', addmarker);
+app.use('/addimage', addimage);
 
 
 
