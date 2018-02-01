@@ -39,7 +39,6 @@ class AddPlaceForm extends React.Component {
                         </Form.Field>
                         <Form.Field>
                               <label>Rodzaj miejsca</label>
-                              {/* <Select placeholder='Select your country' options={this.state.lol} onChange={e => this.changeValue(e)}/> */}
                               <Dropdown placeholder='Rodzaj miejsca' openOnFocus={false} selection options={this.state.lol} onChange={(e,dropdown) => {this.changeValue(e, dropdown)}} />
                         </Form.Field>
                         <Form.Field>
@@ -48,7 +47,16 @@ class AddPlaceForm extends React.Component {
                         </Form.Field>
                         <Form.Field>
                               <label><Icon size="big" name="picture"/> Adres URL do miniaturki</label>
-                              <input placeholder='Adres URL do miniaturki' name="placePictureURL" onChange={e => this.changeValue(e)}/>
+
+                              <Button icon labelPosition='left' onClick={()=>{this.showUploadingImageComponent("Thumbnail")}}>
+                                      <Icon size="large" name='upload' />
+                                      {this.state.placeFormData.placePictureURL ?
+                                          this.state.placeFormData.placePictureURL
+                                          :
+                                          "Kliknij aby ustawić miniaturkę!"
+                                      }
+                              </Button>
+
                         </Form.Field>
                         <Form.Field>
                               <label><Icon size="big" name="wikipedia"/> Adres URL do wikipedii</label>
@@ -77,12 +85,27 @@ class AddPlaceForm extends React.Component {
 
 
                         {
-                            (this.state.showUploadingImageComponent === true ?
+                            (this.state.showQuillUploadingImageComponent === true ?
                                 <ImageUploadingComponent
                                     imageUrlHandler={(link)=>{this.insertImageToEditor(link)}}
-                                    hideImageUploadingComponent={()=>{this.setState({showUploadingImageComponent: false})}}
+                                    hideImageUploadingComponent={()=>{this.setState({showQuillUploadingImageComponent: false})}}
                                 />
-                                : "")
+                            : "")
+                        }
+                        {
+                            (this.state.showThumbnailUploadingImageComponent === true ?
+                                <ImageUploadingComponent
+                                    imageUrlHandler={(link)=>{
+                                        this.setState({
+                                            placeFormData:{
+                                                ...this.state.placeFormData,
+                                                placePictureURL: link
+                                            }
+                                        })
+                                    }}
+                                    hideImageUploadingComponent={()=>{this.setState({showThumbnailUploadingImageComponent: false})}}
+                                />
+                            : "")
                         }
 
 
@@ -103,6 +126,7 @@ class AddPlaceForm extends React.Component {
           </Container>
       );
   }
+
 
     componentDidUpdate(){
           this.runQuill()
@@ -155,6 +179,7 @@ class AddPlaceForm extends React.Component {
         })
     }
 
+
     addMarkerRequest(e){
         e.preventDefault()
         var target = e.target
@@ -188,6 +213,7 @@ class AddPlaceForm extends React.Component {
         }
     }
 
+
     isFormValid(){
         var formFields = this.state.placeFormData
         var placeContent = this.state.quill.getText()
@@ -200,14 +226,12 @@ class AddPlaceForm extends React.Component {
             (formFields.placeDesc.length > 5) &&
             formFields.placeName &&
             (formFields.placeName.length > 5) &&
-            this.isValidURL(formFields.placePictureURL) &&
-            this.isValidURL(formFields.placeWikiURL)
+            this.isValidURL(formFields.placePictureURL)
         ) ? true : false
 
         this.setState({isValide: isValide})
 
         return isValide
-
     }
 
 
@@ -217,14 +241,23 @@ class AddPlaceForm extends React.Component {
     }
 
 
-    imageHandler() {
-        var range = this.state.quill.getSelection();
-        this.setState({showUploadingImageComponent: true, quillRange: range})
-    }
-
     insertImageToEditor(url){
         this.state.quill.insertEmbed(this.state.quillRange.index, "image", url, Quill.sources.USER);
     }
+
+
+    imageHandler() {
+        var range = this.state.quill.getSelection();
+        this.setState({quillRange: range})
+        this.showUploadingImageComponent("Quill")
+    }
+
+
+    showUploadingImageComponent(location){
+        this.setState({["show"+ location + "UploadingImageComponent"]: true})
+    }
+
+
 }
 
 export default AddPlaceForm;

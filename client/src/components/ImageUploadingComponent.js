@@ -86,20 +86,18 @@ class ImageUploadingComponent extends React.Component {
             deletehash: data.deletehash
         }
         imgurData.tags = JSON.stringify(imgurData.tags)
-        console.log(imgurData)
 
         axios({
              method: 'POST',
              url: '/addimage',
              data: imgurData
         }).then(response => {
-            console.log(response)
             const data = response.data
             if(!data.isError){
                 if(imgurData.link){
+                    this.setState({error: data.isError, uploading:false})
                     this.props.imageUrlHandler(imgurData.link)
                     this.props.hideImageUploadingComponent()
-                    this.setState({error: data.isError, uploading:false})
                 }else{
                     this.setState({error: true, uploading:false})
                 }
