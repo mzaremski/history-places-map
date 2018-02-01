@@ -92,7 +92,6 @@ class AddPlaceForm extends React.Component {
                   :
                   <div>
                       <Message info>Kliknij na mapę w celu dodania znacznika.</Message>
-                      {console.log(this.state.isError)}
                           {
                               this.state.isError === false ?
                                   <Message positive>Znacznik został zapisany. Dziękujemy!</Message>
@@ -161,8 +160,6 @@ class AddPlaceForm extends React.Component {
         e.preventDefault()
         var target = e.target
 
-
-        console.log(this.state.placeFormData)
         var placeData = {
             ...this.state.placeFormData,
             lat: this.props.newMarker.lat,
@@ -177,7 +174,6 @@ class AddPlaceForm extends React.Component {
                  url: '/addmarker',
                  data: placeData
             }).then(response => {
-                console.log(response)
                 if(response.data.isError){
                     this.setState({isError: response.data.isError});
                 }else{
@@ -228,8 +224,6 @@ class AddPlaceForm extends React.Component {
     }
 
     insertImageToEditor(url){
-        console.log(url)
-        //var range = this.state.quill.getSelection();
         this.state.quill.insertEmbed(this.state.quillRange.index, "image", url, Quill.sources.USER);
     }
 }

@@ -20,14 +20,11 @@ export class MapContainer extends React.Component {
              }
          }
 
-        console.log(this.state);
-
         if(this.props.config.showMarkers){
             this.state = {...this.state, loading: true}
             axios.get('/markers/all')
               .then(function (response) {
-                  console.log(response.data)
-                  this.setState({markers: response.data, loading: false}, () => {console.log(this.state)});
+                  this.setState({markers: response.data, loading: false});
 
               }.bind(this))
               .catch(function (error) {
@@ -52,7 +49,7 @@ export class MapContainer extends React.Component {
                             ""
                     } */}
                     {this.state.loading ?
-                        console.log("NIE DODAJE ZNACZNIKU")
+                        ""
                         :
                         this.getArrayOfMarkersComponent(this.state)
                     }
@@ -66,8 +63,6 @@ export class MapContainer extends React.Component {
         const markers = []
 
         state.markers.forEach((item, index) => {
-            console.log(state)
-            console.log(item)
             markers.push(
                 <Marker
                     title={item.placeName}
@@ -115,14 +110,12 @@ export class MapContainer extends React.Component {
 
 
     showPopUpOfMarker(marker){
-        //console.log("Over")
         if(!this.state.markerPopUp && !this.props.config.addMarker){
             this.setState({markerPopUp:marker})
         }
     }
 
     hidePopUpOfMarker(e){
-        //console.log("Out")
         this.setState({markerPopUp:false})
     }
 }
