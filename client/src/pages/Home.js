@@ -4,7 +4,6 @@ import { Grid, Dimmer, Loader} from 'semantic-ui-react'
 
 import MapContainer from '../components/MapContainer';
 import Sidebar from '../components/Sidebar';
-import AddPlaceForm from '../components/AddPlaceForm';
 
 
 class Home extends React.Component {
@@ -15,7 +14,7 @@ class Home extends React.Component {
              placeLoading:false,
              config:{
                      addMarker: this.props.appMode === "addPlace" ? true : false,
-                     showMarkers: this.props.appMode === "showMarkers" ? true: false
+                     showMarkerContent: this.props.appMode === "showMarkerContent" ? true: false
              }
          }
     }
@@ -25,21 +24,33 @@ class Home extends React.Component {
             <Grid style={{height:"98vh"}}>
                 <Grid.Row >
                      <Grid.Column style={{paddingTop:"20px" ,position: "relative", zIndex: 1000, left: "13px", boxShadow: "5px 5px 20px 0px rgba(0,0,0,0.3)", overflowY: "scroll", boxSizing: "border-box"}}  width={4}>
-                         {
+                         {/* {
                          this.props.appMode === 'addPlace' ?
                              <AddPlaceForm
                                  newMarker={this.state.newMarker ? this.state.newMarker : false}
                                  newMarkerAdded={this.newMarkerAdded.bind(this)}
                              />
                              :
-                             (this.state.clickedMarkerLoading ?
-                                 <Dimmer active>
-                                     <Loader size='large'>Loading</Loader>
-                                 </Dimmer>
+                             (this.props.appMode === 'showMarkerContent' ?
+                                 (this.state.clickedMarkerLoading ?
+                                     <Dimmer active>
+                                         <Loader size='large'>Loading</Loader>
+                                     </Dimmer>
+                                     :
+                                     <MarkerContent clickedMarker={this.state.clickedMarker ? this.state.clickedMarker : false}/>
+                                 )
                                  :
-                                 <Sidebar clickedMarker={this.state.clickedMarker ? this.state.clickedMarker : false}/>
-                             )
-                         }
+                                 ""
+                             ) */}
+                             <Sidebar
+                                 appMode={this.props.appMode}
+                                 newMarker={this.state.newMarker ? this.state.newMarker : false}
+                                 newMarkerAdded={this.newMarkerAdded.bind(this)}
+                                 clickedMarker={this.state.clickedMarker ? this.state.clickedMarker : false}
+                                 clickedMarkerLoading={this.state.clickedMarkerLoading}
+                             ></Sidebar>
+
+                         {/* } */}
                      </Grid.Column>
 
                      <Grid.Column width={12}>

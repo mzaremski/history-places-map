@@ -13,12 +13,12 @@ class App extends React.Component {
         <Router>
             <Container fluid>
                 <Menu style={{"marginBottom": 0,position: "relative", zIndex: 1000000}}>
-                    <Menu.Item header>Multimedialna mapa historyczna</Menu.Item>
+                    <Menu.Item header>Historyczna mapa Polski</Menu.Item>
                     <Menu.Item as={Link} to='/' name='Mapa'/>
                     <Menu.Item as={Link} to='/addplace' name='Dodaj Miejsce'/>
                 </Menu>
 
-                <Route exact path="/" render={() => <Home appMode="showMarkers"/>} />
+                <Route exact path="/" render={() => <Home appMode="showMarkerContent"/>} />
                 {/* {render={() => <Home sidebar={} />} */}
                 <Route exact path="/addplace"  render={() => <Home appMode="addPlace"/>} />
 

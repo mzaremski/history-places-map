@@ -20,7 +20,7 @@ export class MapContainer extends React.Component {
              }
          }
 
-        if(this.props.config.showMarkers){
+        if(this.props.config.showMarkerContent){
             this.state = {...this.state, loading: true}
             axios.get('/markers/all')
               .then(function (response) {

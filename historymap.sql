@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 01 Lut 2018, 12:12
+-- Czas generowania: 01 Lut 2018, 18:01
 -- Wersja serwera: 10.1.25-MariaDB
 -- Wersja PHP: 5.6.31
 
@@ -21,6 +21,27 @@ SET time_zone = "+00:00";
 --
 -- Baza danych: `historymap`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `images`
+--
+
+CREATE TABLE `images` (
+  `id` varchar(200) NOT NULL,
+  `datetime` int(11) NOT NULL,
+  `link` varchar(200) NOT NULL,
+  `tags` varchar(2000) NOT NULL,
+  `deletehash` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Zrzut danych tabeli `images`
+--
+
+INSERT INTO `images` (`id`, `datetime`, `link`, `tags`, `deletehash`) VALUES
+('wpn5UXp', 1517483498, 'https://i.imgur.com/wpn5UXp.jpg', '[]', 't2qS13fg2ttqLtr');
 
 -- --------------------------------------------------------
 
@@ -55,6 +76,12 @@ INSERT INTO `markers` (`id`, `placeName`, `placeDesc`, `type`, `placeContent`, `
 --
 
 --
+-- Indexes for table `images`
+--
+ALTER TABLE `images`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `markers`
 --
 ALTER TABLE `markers`
@@ -68,7 +95,7 @@ ALTER TABLE `markers`
 -- AUTO_INCREMENT dla tabeli `markers`
 --
 ALTER TABLE `markers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;COMMIT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
