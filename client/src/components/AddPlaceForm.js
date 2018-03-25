@@ -14,7 +14,7 @@ class AddPlaceForm extends React.Component {
             showUploadingImageComponent: false,
             placeFormData: {},
             idForm: "addPlaceForm",
-            lol: [
+            dropdownOption: [
                 { key: 'grave', value: 'grave', text: 'Cmentarz/Grób' },
                 { key: 'church', value: 'church', text: 'Kościół' },
                 { key: 'monument', value: 'monument', text: 'Pomnik' },
@@ -39,7 +39,7 @@ class AddPlaceForm extends React.Component {
                         </Form.Field>
                         <Form.Field>
                               <label>Rodzaj miejsca</label>
-                              <Dropdown placeholder='Rodzaj miejsca' openOnFocus={false} selection options={this.state.lol} onChange={(e,dropdown) => {this.changeValue(e, dropdown)}} />
+                              <Dropdown placeholder='Rodzaj miejsca' openOnFocus={false} selection options={this.state.dropdownOption} onChange={(e,dropdown) => {this.changeValue(e, dropdown)}} />
                         </Form.Field>
                         <Form.Field>
                               <label>Opis miejsca</label>

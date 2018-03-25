@@ -14,7 +14,7 @@ class Home extends React.Component {
              placeLoading:false,
              config:{
                      addMarker: this.props.appMode === "addPlace" ? true : false,
-                     showMarkerContent: this.props.appMode === "showMarkerContent" ? true: false
+                     showAllMarkersMode: this.props.appMode === "showAllMarkersMode" ? true: false
              }
          }
     }
@@ -23,34 +23,16 @@ class Home extends React.Component {
         return (
             <Grid style={{height:"98vh"}}>
                 <Grid.Row >
-                     <Grid.Column style={{paddingTop:"20px" ,position: "relative", zIndex: 1000, left: "13px", boxShadow: "5px 5px 20px 0px rgba(0,0,0,0.3)", overflowY: "scroll", boxSizing: "border-box"}}  width={4}>
-                         {/* {
-                         this.props.appMode === 'addPlace' ?
-                             <AddPlaceForm
-                                 newMarker={this.state.newMarker ? this.state.newMarker : false}
-                                 newMarkerAdded={this.newMarkerAdded.bind(this)}
-                             />
-                             :
-                             (this.props.appMode === 'showMarkerContent' ?
-                                 (this.state.clickedMarkerLoading ?
-                                     <Dimmer active>
-                                         <Loader size='large'>Loading</Loader>
-                                     </Dimmer>
-                                     :
-                                     <MarkerContent clickedMarker={this.state.clickedMarker ? this.state.clickedMarker : false}/>
-                                 )
-                                 :
-                                 ""
-                             ) */}
+                     <Grid.Column className="sidePanel"  width={4}>
                              <Sidebar
-                                 appMode={this.props.appMode}
-                                 newMarker={this.state.newMarker ? this.state.newMarker : false}
-                                 newMarkerAdded={this.newMarkerAdded.bind(this)}
-                                 clickedMarker={this.state.clickedMarker ? this.state.clickedMarker : false}
-                                 clickedMarkerLoading={this.state.clickedMarkerLoading}
+                                 appMode={ this.props.appMode }
+                                 newMarker={ this.state.newMarker ? this.state.newMarker : false }
+                                 newMarkerAdded={ this.newMarkerAdded.bind(this) }
+                                 clickedMarker={ this.state.clickedMarker ? this.state.clickedMarker : false }
+                                 clickedMarkerLoading={ this.state.clickedMarkerLoading }
+                                 closeMarkerContent={ ()=>{ this.setState({clickedMarker: false}) } }
+                                 addFoundMarkersToMap={ this.addFoundMarkersToMap.bind(this) }
                              ></Sidebar>
-
-                         {/* } */}
                      </Grid.Column>
 
                      <Grid.Column width={12}>
@@ -59,6 +41,7 @@ class Home extends React.Component {
                             addNewMarker={this.addNewMarker.bind(this)}
                             onMarkerClick={this.onMarkerClick.bind(this)}
                             deleteClickedMarker={this.state.deleteClickedMarker}
+                            foundMarkers={this.state.foundMarkers}
                         />
                     </Grid.Column>
                 </Grid.Row>
@@ -86,6 +69,10 @@ class Home extends React.Component {
 
     newMarkerAdded(){
         this.setState({newMarker: false})
+    }
+
+    addFoundMarkersToMap(markers){
+        this.setState({foundMarkers: markers})
     }
 }
 

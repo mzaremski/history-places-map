@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import { Container, Menu} from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import './css/app.css';
 
 import Home from './pages/Home';
 
@@ -18,7 +19,7 @@ class App extends React.Component {
                     <Menu.Item as={Link} to='/addplace' name='Dodaj Miejsce'/>
                 </Menu>
 
-                <Route exact path="/" render={() => <Home appMode="showMarkerContent"/>} />
+                <Route exact path="/" render={() => <Home appMode="showAllMarkersMode"/>} />
                 {/* {render={() => <Home sidebar={} />} */}
                 <Route exact path="/addplace"  render={() => <Home appMode="addPlace"/>} />
 

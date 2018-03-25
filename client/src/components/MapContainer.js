@@ -11,6 +11,8 @@ export class MapContainer extends React.Component {
          super(props);
          this.state = {
              markers: [],
+             foundMarkersIsLoaded: false,
+             allMarkersIsLoaded: false,
              markerIconSrc:{
                  "default": "marker2.png",
                  "grave": "grave-icon.png",
@@ -19,18 +21,10 @@ export class MapContainer extends React.Component {
                  "church": "church-icon.png"
              }
          }
+    }
 
-        if(this.props.config.showMarkerContent){
-            this.state = {...this.state, loading: true}
-            axios.get('/markers/all')
-              .then(function (response) {
-                  this.setState({markers: response.data, loading: false});
-
-              }.bind(this))
-              .catch(function (error) {
-                console.log(error);
-              });
-        }
+    componentDidUpdate(){
+        this.loadMarkers();
     }
 
     render() {
@@ -86,6 +80,7 @@ export class MapContainer extends React.Component {
         return markers
     }
 
+
     onMapClicked(mapProps, map, clickEvent) {
         //if config allow to add marker on click, it will be add
         if(this.props.config.addMarker){
@@ -100,6 +95,37 @@ export class MapContainer extends React.Component {
 
             this.setState({markers: [marker], loading: false})
             this.props.addNewMarker(marker)
+        }
+    }
+
+
+    loadMarkers(){
+        if(this.props.foundMarkers && this.props.foundMarkers != this.state.markers){
+            //load found markers
+            this.setState({
+                markers:this.props.foundMarkers,
+                foundMarkersIsLoaded: true,
+                allMarkersIsLoaded: false
+            })
+        }else{
+            //load all markers
+            if(this.props.config.showAllMarkersMode && !this.state.allMarkersIsLoaded && !this.props.foundMarkers){
+
+                this.state = {...this.state, loading: true}
+
+                axios.get('/markers/all')
+                  .then(function (response) {
+                      this.setState({
+                          markers: response.data,
+                          loading: false,
+                          foundMarkersIsLoaded: false,
+                          allMarkersIsLoaded: true
+                      });
+                  }.bind(this))
+                  .catch(function (error) {
+                    console.log(error);
+                  });
+            }
         }
     }
 

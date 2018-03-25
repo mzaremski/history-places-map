@@ -1,6 +1,7 @@
 import React from 'react';
 import {Container, Dimmer, Loader} from 'semantic-ui-react';
 import MarkerContent from '../components/MarkerContent';
+import MarkerSearchPanel from '../components/MarkerSearchPanel';
 import AddPlaceForm from '../components/AddPlaceForm';
 
 class Sidebar extends React.Component {
@@ -20,13 +21,17 @@ class Sidebar extends React.Component {
 
               :
 
-              (this.props.appMode === 'showMarkerContent' ?
+              (this.props.appMode === 'showAllMarkersMode' ?
                   (this.props.clickedMarkerLoading ?
                       <Dimmer active>
                           <Loader size='large'>Loading</Loader>
                       </Dimmer>
                       :
-                      <MarkerContent clickedMarker={this.props.clickedMarker}/>
+                      (this.props.clickedMarker ?
+                          <MarkerContent clickedMarker={this.props.clickedMarker} closeMarkerContent={this.props.closeMarkerContent}/>
+                          :
+                          <MarkerSearchPanel addFoundMarkersToMap={this.addFoundMarkersToMap.bind(this)}/>
+                      )
                   )
                   :
                   ""
@@ -38,8 +43,13 @@ class Sidebar extends React.Component {
     newMarkerAdded(){
         this.props.newMarkerAdded()
     }
+    addFoundMarkersToMap(markers){
+        this.props.addFoundMarkersToMap(markers)
+    }
 
-
+    // closeMarkerContent(){
+    //     this.props.closeMarkerContent()
+    // }
 
 }
 

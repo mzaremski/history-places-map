@@ -15,6 +15,9 @@ class MarkerContent extends React.Component {
             {this.props.clickedMarker ?
 
                 <Container fluid style={{paddingTop: "30px"}}>
+                    <a tabIndex="1" className="closeButton">
+                        <Icon size="big" name="close" onClick={ () => this.props.closeMarkerContent() }></Icon>
+                    </a>
                     <Header as='h2' icon textAlign='center'>
                          <Icon name='marker'size="tiny"/>
                          <Header.Content>
@@ -56,6 +59,7 @@ class MarkerContent extends React.Component {
               el.innerHTML = ql.container.innerHTML
               document.querySelector("#placeContent").innerHTML = "";
               document.querySelector("#placeContent").appendChild(el)
+              el.querySelector(".ql-editor").setAttribute("contenteditable", "false")
           }
       }
 
